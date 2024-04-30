@@ -1,0 +1,20 @@
+version: '3'
+
+tasks:
+  # Run using docker
+  up:
+    dir: '{{.USER_WORKING_DIR}}'
+    preconditions:
+      - test -f docker-compose.yml
+    cmds:
+      - docker-compose up -d app-dev
+
+  # Update DI deps
+  wire:
+    cmds:
+      - cd internal && wire
+
+  # Update swagger files
+  swag:
+    cmds:
+      - swag init -g cmd/main.go --output docs

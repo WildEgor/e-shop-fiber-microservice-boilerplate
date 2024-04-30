@@ -1,0 +1,30 @@
+info:
+  contact: {}
+paths:
+  /api/v1/livez:
+    get:
+      consumes:
+      - application/json
+      description: Health check service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Health check service
+      tags:
+      - Health Controller
+  /api/v1/readyz:
+    get:
+      consumes:
+      - application/json
+      description: Readness check service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Readness check service
+      tags:
+      - Health Controller
+swagger: "2.0"

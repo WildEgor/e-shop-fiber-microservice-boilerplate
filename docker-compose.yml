@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  # Development container. 
+  # Runs in debug mode and live-reloading on every source file update.
+  app-dev:
+    hostname: app-dev
+    restart: unless-stopped
+    build:
+      args:
+        - GITHUB_TOKEN=${GITHUB_TOKEN} # if use private repos
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "8888:8888"
+
+  app:
+    hostname: app
+    restart: unless-stopped
+    build:
+      args:
+        - GITHUB_TOKEN=${GITHUB_TOKEN} # if use private repos
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    env_file:
+      - .env
+    # Specify method fetch .env!
+    volumes:
+      - ./.env:/app/.env
+    ports:
+      - "8888:8888"
+#    command: tail -f /dev/null
