@@ -7,11 +7,11 @@
 package pkg
 
 import (
-	"github.com/WildEgor/fibergo-microservice-boilerplate/internal/config"
-	"github.com/WildEgor/fibergo-microservice-boilerplate/internal/handlers/errors"
-	"github.com/WildEgor/fibergo-microservice-boilerplate/internal/handlers/health-check"
-	"github.com/WildEgor/fibergo-microservice-boilerplate/internal/handlers/readness-check"
-	"github.com/WildEgor/fibergo-microservice-boilerplate/internal/router"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/config"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/errors"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/router"
 	"github.com/google/wire"
 )
 
@@ -20,13 +20,13 @@ import (
 func NewServer() (*Server, error) {
 	configurator := config.NewConfigurator()
 	appConfig := config.NewAppConfig(configurator)
+	errorsHandler := error_handler.NewErrorsHandler()
 	privateRouter := router.NewPrivateRouter()
 	healthCheckHandler := health_check_handler.NewHealthCheckHandler()
-	readyCheckHandler := ready_check_handler.NewReadCheckHandler()
+	readyCheckHandler := ready_check_handler.NewReadyCheckHandler()
 	publicRouter := router.NewPublicRouter(healthCheckHandler, readyCheckHandler)
 	swaggerRouter := router.NewSwaggerRouter()
-	errorsHandler := error_handler.NewErrorsHandler()
-	server := NewApp(appConfig, privateRouter, publicRouter, swaggerRouter, errorsHandler)
+	server := NewApp(appConfig, errorsHandler, privateRouter, publicRouter, swaggerRouter)
 	return server, nil
 }
 

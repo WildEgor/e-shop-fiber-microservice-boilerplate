@@ -9,7 +9,16 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "termsOfService": "/",
+        "contact": {
+            "name": "mail",
+            "url": "/",
+            "email": "kartashov_egor96@mail.ru"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "http://www.apache.org/licenses/MIT.html"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -37,7 +46,7 @@ const docTemplate = `{
         },
         "/api/v1/readyz": {
             "get": {
-                "description": "Readness check service",
+                "description": "Ready check service",
                 "consumes": [
                     "application/json"
                 ],
@@ -47,7 +56,7 @@ const docTemplate = `{
                 "tags": [
                     "Health Controller"
                 ],
-                "summary": "Readness check service",
+                "summary": "Ready check service",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -60,12 +69,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
-	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Version:          "1.0",
+	Host:             "localhost:8888",
+	BasePath:         "/",
+	Schemes:          []string{"http"},
+	Title:            "Swagger Doc",
+	Description:      "App",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

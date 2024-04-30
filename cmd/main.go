@@ -1,12 +1,11 @@
 package main
 
 import (
-	"os"
+	"context"
 	"os/signal"
 	"syscall"
 
-	server "github.com/WildEgor/fibergo-microservice-boilerplate/internal"
-	log "github.com/sirupsen/logrus"
+	server "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal"
 )
 
 // @title		Swagger Doc
@@ -15,28 +14,24 @@ import (
 // @termsOfService	/
 // @contact.name	mail
 // @contact.url	/
-// @contact.email	TODO
+// @contact.email	kartashov_egor96@mail.ru
 // @license.name	MIT
 // @license.url	http://www.apache.org/licenses/MIT.html
 // @host			localhost:8888
 // @BasePath		/
 // @schemes		http
 func main() {
-	sigCh := make(chan os.Signal, 1)
-	doneCh := make(chan bool, 1)
-
-	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-
-	go func() {
-		sig := <-sigCh
-		log.Printf("[Main] Recieve shutdown signal %s", sig)
-		doneCh <- true
-	}()
+	ctx, done := signal.NotifyContext(context.Background(),
+		syscall.SIGHUP,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
+	)
+	defer done()
 
 	srv, _ := server.NewServer()
-	srv.Run()
+	srv.Run(&ctx)
 
-	<-doneCh
-
+	<-ctx.Done()
 	srv.Shutdown()
 }

@@ -1,5 +1,17 @@
+basePath: /
+host: localhost:8888
 info:
-  contact: {}
+  contact:
+    email: kartashov_egor96@mail.ru
+    name: mail
+    url: /
+  description: App
+  license:
+    name: MIT
+    url: http://www.apache.org/licenses/MIT.html
+  termsOfService: /
+  title: Swagger Doc
+  version: "1.0"
 paths:
   /api/v1/livez:
     get:
@@ -18,13 +30,15 @@ paths:
     get:
       consumes:
       - application/json
-      description: Readness check service
+      description: Ready check service
       produces:
       - application/json
       responses:
         "200":
           description: OK
-      summary: Readness check service
+      summary: Ready check service
       tags:
       - Health Controller
+schemes:
+- http
 swagger: "2.0"

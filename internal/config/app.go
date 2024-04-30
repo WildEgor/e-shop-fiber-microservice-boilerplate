@@ -21,7 +21,7 @@ func NewAppConfig(c *Configurator) *AppConfig {
 	cfg := AppConfig{}
 
 	if err := env.Parse(&cfg); err != nil {
-		slog.Error("app config parse error", "data", slog.Any("error", err))
+		slog.Error("app config parse error")
 	}
 
 	return &cfg
