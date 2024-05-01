@@ -28,7 +28,7 @@ type Server struct {
 	AppConfig *configs.AppConfig
 }
 
-func (srv *Server) Run(ctx *context.Context) {
+func (srv *Server) Run(ctx context.Context) {
 	slog.Info("server is listening")
 
 	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.Port)); err != nil {
@@ -36,7 +36,7 @@ func (srv *Server) Run(ctx *context.Context) {
 	}
 }
 
-func (srv *Server) Shutdown() {
+func (srv *Server) Shutdown(ctx context.Context) {
 	slog.Info("shutdown service")
 	if err := srv.App.Shutdown(); err != nil {
 		slog.Error("unable to shutdown server")
