@@ -1,4 +1,4 @@
-package config
+package configs
 
 import (
 	"github.com/caarlos0/env/v7"

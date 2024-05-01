@@ -3,7 +3,7 @@ package pkg
 import (
 	"context"
 	"fmt"
-	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/config"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/configs"
 	eh "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/errors"
 	nfm "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/middlewares/not_found"
 	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/router"
@@ -18,14 +18,14 @@ import (
 
 var AppSet = wire.NewSet(
 	NewApp,
-	config.ConfigsSet,
+	configs.ConfigsSet,
 	router.RouterSet,
 )
 
 // Server represents the main server configuration.
 type Server struct {
 	App       *fiber.App
-	AppConfig *config.AppConfig
+	AppConfig *configs.AppConfig
 }
 
 func (srv *Server) Run(ctx *context.Context) {
@@ -44,7 +44,7 @@ func (srv *Server) Shutdown() {
 }
 
 func NewApp(
-	ac *config.AppConfig,
+	ac *configs.AppConfig,
 	eh *eh.ErrorsHandler,
 	prr *router.PrivateRouter,
 	pbr *router.PublicRouter,

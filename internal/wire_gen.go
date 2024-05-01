@@ -7,7 +7,7 @@
 package pkg
 
 import (
-	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/config"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/configs"
 	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/errors"
 	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
 	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
@@ -18,8 +18,8 @@ import (
 // Injectors from server.go:
 
 func NewServer() (*Server, error) {
-	configurator := config.NewConfigurator()
-	appConfig := config.NewAppConfig(configurator)
+	configurator := configs.NewConfigurator()
+	appConfig := configs.NewAppConfig(configurator)
 	errorsHandler := error_handler.NewErrorsHandler()
 	privateRouter := router.NewPrivateRouter()
 	healthCheckHandler := health_check_handler.NewHealthCheckHandler()
