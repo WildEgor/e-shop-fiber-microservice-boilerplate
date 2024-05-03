@@ -1,14 +1,16 @@
 package handlers
 
 import (
-	eh "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/errors"
-	hch "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
-	rch "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
+	error_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/errors"
+	health_check_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
+	ping_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ping"
+	ready_check_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
 	"github.com/google/wire"
 )
 
 var HandlersSet = wire.NewSet(
-	eh.NewErrorsHandler,
-	hch.NewHealthCheckHandler,
-	rch.NewReadyCheckHandler,
+	error_handler.NewErrorsHandler,
+	health_check_handler.NewHealthCheckHandler,
+	ready_check_handler.NewReadyCheckHandler,
+	ping_handler.NewPingHandler,
 )

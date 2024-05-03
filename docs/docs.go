@@ -44,6 +44,26 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/ping": {
+            "get": {
+                "description": "Just random return 200 OK or error",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Test Controller"
+                ],
+                "summary": "Dummy ping",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/v1/readyz": {
             "get": {
                 "description": "Ready check service",
@@ -70,7 +90,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8888",
+	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{"http"},
 	Title:            "Swagger Doc",

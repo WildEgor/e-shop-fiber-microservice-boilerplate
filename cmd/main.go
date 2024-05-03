@@ -4,6 +4,7 @@ import (
 	"context"
 	"os/signal"
 	"syscall"
+	"time"
 
 	server "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal"
 )
@@ -33,5 +34,11 @@ func main() {
 	srv.Run(ctx)
 
 	<-ctx.Done()
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer func() {
+		cancel()
+	}()
+
 	srv.Shutdown(ctx)
 }

@@ -14,6 +14,7 @@ import (
 	"github.com/google/wire"
 	"log/slog"
 	"os"
+	"time"
 )
 
 var AppSet = wire.NewSet(
@@ -31,13 +32,20 @@ type Server struct {
 func (srv *Server) Run(ctx context.Context) {
 	slog.Info("server is listening")
 
-	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.Port)); err != nil {
+	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.Port), fiber.ListenConfig{
+		DisableStartupMessage: false,
+		EnablePrintRoutes:     false,
+		OnShutdownSuccess: func() {
+			slog.Debug("success shutdown service")
+		},
+	}); err != nil {
 		slog.Error("unable to start server")
 	}
 }
 
 func (srv *Server) Shutdown(ctx context.Context) {
 	slog.Info("shutdown service")
+
 	if err := srv.App.Shutdown(); err != nil {
 		slog.Error("unable to shutdown server")
 	}
@@ -61,14 +69,18 @@ func NewApp(
 	slog.SetDefault(logger)
 
 	app := fiber.New(fiber.Config{
+		AppName:      ac.Name,
 		ErrorHandler: eh.Handle,
 		Views:        html.New("./views", ".html"),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
+		IdleTimeout:  30 * time.Second,
 	})
 
 	app.Use(cors.New(cors.Config{
-		AllowHeaders: "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Connection, Access-Control-Allow-Origin",
+		AllowHeaders: "Origin, Content-Type, Accept, Content-Length, Accept-Language, Accept-Encoding, Authorization, Connection, Access-Control-Allow-Origin",
 		AllowOrigins: "*",
-		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
 	}))
 	app.Use(recover.New())
 

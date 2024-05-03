@@ -1,8 +1,9 @@
 package router
 
 import (
-	hch "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
-	rch "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
+	health_check_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
+	ping_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ping"
+	ready_check_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
 	"github.com/gofiber/fiber/v3/middleware/limiter"
@@ -10,17 +11,20 @@ import (
 )
 
 type PublicRouter struct {
-	hch *hch.HealthCheckHandler
-	rch *rch.ReadyCheckHandler
+	hch *health_check_handler.HealthCheckHandler
+	rch *ready_check_handler.ReadyCheckHandler
+	ph  *ping_handler.PingCheckHandler
 }
 
 func NewPublicRouter(
-	hh *hch.HealthCheckHandler,
-	rch *rch.ReadyCheckHandler,
+	hch *health_check_handler.HealthCheckHandler,
+	rch *ready_check_handler.ReadyCheckHandler,
+	ph *ping_handler.PingCheckHandler,
 ) *PublicRouter {
 	return &PublicRouter{
-		hh,
+		hch,
 		rch,
+		ph,
 	}
 }
 
@@ -31,13 +35,10 @@ func (r *PublicRouter) Setup(app *fiber.App) {
 	}))
 	v1 := api.Group("/v1")
 
-	v1.Get("/ping", func(ctx fiber.Ctx) error {
-		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-			"message": "pong",
-		})
-	})
+	// TODO: use for testing only (remove it)
+	v1.Get("/ping", r.ph.Handle)
 
-	app.Get("/api/v1/livez", healthcheck.NewHealthChecker(healthcheck.Config{
+	v1.Get("/livez", healthcheck.NewHealthChecker(healthcheck.Config{
 		Probe: func(ctx fiber.Ctx) bool {
 			if err := r.hch.Handle(ctx); err != nil {
 				slog.Error("error not healthy")
@@ -49,7 +50,7 @@ func (r *PublicRouter) Setup(app *fiber.App) {
 			return true
 		},
 	}))
-	app.Get("/api/v1/readyz", healthcheck.NewHealthChecker(healthcheck.Config{
+	v1.Get("/readyz", healthcheck.NewHealthChecker(healthcheck.Config{
 		Probe: func(ctx fiber.Ctx) bool {
 			if err := r.rch.Handle(ctx); err != nil {
 				slog.Error("error not ready")

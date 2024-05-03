@@ -21,6 +21,6 @@ func NewReadyCheckHandler() *ReadyCheckHandler {
 //	@Success		200
 //	@Router			/api/v1/readyz [get]
 func (hch *ReadyCheckHandler) Handle(ctx fiber.Ctx) error {
-	// Add own checks
+	// TODO: Add own checks
 	return nil
 }

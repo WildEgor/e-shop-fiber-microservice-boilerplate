@@ -20,11 +20,8 @@ func (hch *ErrorsHandler) Handle(ctx fiber.Ctx, err error) error {
 	}
 
 	ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+	ctx.Status(sc)
 
-	if e != nil {
-		ctx.Status(sc)
-		return nil
-	}
-
-	return nil
+	// TODO: replace with your own structure if needed
+	return ctx.SendString(err.Error())
 }

@@ -41,6 +41,26 @@
                 }
             }
         },
+        "/api/v1/ping": {
+            "get": {
+                "description": "Just random return 200 OK or error",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Test Controller"
+                ],
+                "summary": "Dummy ping",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/v1/readyz": {
             "get": {
                 "description": "Ready check service",
