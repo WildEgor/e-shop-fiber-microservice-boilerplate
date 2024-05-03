@@ -1,27 +1,21 @@
 # Base Stage
 FROM golang:1.22-alpine AS base
 LABEL maintainer="YOUR_NAME <YOUR_EMAIL>"
-
-# if use private libs
+# if use private libs uncomment this
 #ARG GITHUB_TOKEN
 #RUN apk update && apk add ca-certificates git openssh
 #RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
-
 WORKDIR /app
 COPY go.mod go.sum ./
-
 RUN go mod download && mkdir -p dist
 
 # Development Stage
 FROM base as dev
-WORKDIR /app
+RUN go install github.com/cosmtrek/air@latest
+WORKDIR /app/
 COPY . .
-RUN go install -mod=mod github.com/cosmtrek/air
-ENTRYPOINT ["air"]
-
-# # Test Stage
-# FROM base as test
-# ENTRYPOINT make test
+RUN go build -o dist/app cmd/main.go
+CMD ["air", "-c", ".air-unix.toml", "-d"]
 
 # Build Production Stage
 FROM base as builder
