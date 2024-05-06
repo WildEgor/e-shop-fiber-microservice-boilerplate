@@ -8,6 +8,20 @@ A containerised eShopFiberMicroserviceBoilerplate (mmm Java-style naming)
 | Hot Reloading     | [Air](https://github.com/cosmtrek/air) |
 | Containerisation  | [Docker](https://www.docker.com/)      |
 
+## Structure
+
+- [/api](api/README.md)
+- [/assets](assets/README.md)
+- [/cmd](cmd/README.md)
+- [/internal/adapters](internal/adapters/README.md)
+- [/internal/configs](internal/configs/README.md)
+- [/internal/handlers](internal/handlers/README.md)
+- [/internal/mappers](internal/mappers/README.md)
+- [/internal/middlewares](internal/middlewares/README.md)
+- [/internal/models](internal/models/README.md)
+- [/internal/repositories](internal/repositories/README.md)
+- [/internal/routers](internal/routers/README.md)
+
 ## Development
 
 Install the dependencies:

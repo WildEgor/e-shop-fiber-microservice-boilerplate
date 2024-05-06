@@ -6,7 +6,7 @@ import (
 	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/configs"
 	eh "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/errors"
 	nfm "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/middlewares/not_found"
-	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/router"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/routers"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/recover"
@@ -20,7 +20,7 @@ import (
 var AppSet = wire.NewSet(
 	NewApp,
 	configs.ConfigsSet,
-	router.RouterSet,
+	routers.RouterSet,
 )
 
 // Server represents the main server configuration.
@@ -54,9 +54,9 @@ func (srv *Server) Shutdown(ctx context.Context) {
 func NewApp(
 	ac *configs.AppConfig,
 	eh *eh.ErrorsHandler,
-	prr *router.PrivateRouter,
-	pbr *router.PublicRouter,
-	sr *router.SwaggerRouter,
+	prr *routers.PrivateRouter,
+	pbr *routers.PublicRouter,
+	sr *routers.SwaggerRouter,
 ) *Server {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
@@ -71,7 +71,7 @@ func NewApp(
 	app := fiber.New(fiber.Config{
 		AppName:      ac.Name,
 		ErrorHandler: eh.Handle,
-		Views:        html.New("./views", ".html"),
+		Views:        html.New("./assets", ".html"),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		IdleTimeout:  30 * time.Second,

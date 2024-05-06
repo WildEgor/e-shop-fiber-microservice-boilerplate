@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+// ErrorsHandler acts like global error handler
 type ErrorsHandler struct {
 }
 

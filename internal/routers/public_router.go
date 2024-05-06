@@ -1,4 +1,4 @@
-package router
+package routers
 
 import (
 	health_check_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"

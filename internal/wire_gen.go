@@ -12,7 +12,7 @@ import (
 	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
 	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ping"
 	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
-	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/router"
+	"github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/routers"
 	"github.com/google/wire"
 )
 
@@ -22,12 +22,12 @@ func NewServer() (*Server, error) {
 	configurator := configs.NewConfigurator()
 	appConfig := configs.NewAppConfig(configurator)
 	errorsHandler := error_handler.NewErrorsHandler()
-	privateRouter := router.NewPrivateRouter()
+	privateRouter := routers.NewPrivateRouter()
 	healthCheckHandler := health_check_handler.NewHealthCheckHandler()
 	readyCheckHandler := ready_check_handler.NewReadyCheckHandler()
 	pingCheckHandler := ping_handler.NewPingHandler()
-	publicRouter := router.NewPublicRouter(healthCheckHandler, readyCheckHandler, pingCheckHandler)
-	swaggerRouter := router.NewSwaggerRouter()
+	publicRouter := routers.NewPublicRouter(healthCheckHandler, readyCheckHandler, pingCheckHandler)
+	swaggerRouter := routers.NewSwaggerRouter()
 	server := NewApp(appConfig, errorsHandler, privateRouter, publicRouter, swaggerRouter)
 	return server, nil
 }

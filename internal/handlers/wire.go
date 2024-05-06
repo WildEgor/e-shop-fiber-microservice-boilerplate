@@ -8,6 +8,7 @@ import (
 	"github.com/google/wire"
 )
 
+// HandlersSet contains http/amqp/etc handlers (acts like facades)
 var HandlersSet = wire.NewSet(
 	error_handler.NewErrorsHandler,
 	health_check_handler.NewHealthCheckHandler,
