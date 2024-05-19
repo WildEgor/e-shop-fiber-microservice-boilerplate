@@ -24,5 +24,5 @@ func (hch *ErrorsHandler) Handle(ctx fiber.Ctx, err error) error {
 	ctx.Status(sc)
 
 	// TODO: replace with your own structure if needed
-	return ctx.SendString(err.Error())
+	return ctx.Send([]byte{})
 }

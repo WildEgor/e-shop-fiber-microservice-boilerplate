@@ -17,6 +17,7 @@ import (
 	"time"
 )
 
+// AppSet link main app deps
 var AppSet = wire.NewSet(
 	NewApp,
 	configs.ConfigsSet,
@@ -29,6 +30,7 @@ type Server struct {
 	AppConfig *configs.AppConfig
 }
 
+// Run start service with deps
 func (srv *Server) Run(ctx context.Context) {
 	slog.Info("server is listening")
 
@@ -43,6 +45,7 @@ func (srv *Server) Run(ctx context.Context) {
 	}
 }
 
+// Shutdown graceful shutdown
 func (srv *Server) Shutdown(ctx context.Context) {
 	slog.Info("shutdown service")
 
@@ -53,17 +56,18 @@ func (srv *Server) Shutdown(ctx context.Context) {
 
 func NewApp(
 	ac *configs.AppConfig,
+	lc *configs.LoggerConfig,
 	eh *eh.ErrorsHandler,
 	prr *routers.PrivateRouter,
 	pbr *routers.PublicRouter,
 	sr *routers.SwaggerRouter,
 ) *Server {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelDebug,
+		Level: lc.Level,
 	}))
-	if ac.IsProduction() {
+	if lc.IsJSON() {
 		logger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			Level: slog.LevelInfo,
+			Level: lc.Level,
 		}))
 	}
 	slog.SetDefault(logger)

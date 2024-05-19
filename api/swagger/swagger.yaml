@@ -5,12 +5,12 @@ info:
     email: kartashov_egor96@mail.ru
     name: mail
     url: /
-  description: App
+  description: '[Service name here]'
   license:
     name: MIT
     url: http://www.apache.org/licenses/MIT.html
   termsOfService: /
-  title: Swagger Doc
+  title: '[Service name here] Swagger Doc'
   version: "1.0"
 paths:
   /api/v1/livez:

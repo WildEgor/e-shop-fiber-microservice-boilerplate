@@ -17,8 +17,8 @@ func NewConfigurator() *Configurator {
 
 // load Load env data from files (default: .env, .env.local)
 func (c *Configurator) load() {
-	err := godotenv.Load(".env", ".env.local")
-	if err != nil {
-		slog.Error("error loading envs file")
+	if err := godotenv.Load(".env", ".env.local"); err != nil {
+		slog.Error("error loading envs file", slog.Any("err", err))
+		panic(err)
 	}
 }

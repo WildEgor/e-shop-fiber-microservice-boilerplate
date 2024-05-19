@@ -9,19 +9,20 @@ import (
 	server "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal"
 )
 
-// @title		Swagger Doc
-// @version		1.0
-// @description	App
+// @title			[Service name here] Swagger Doc
+// @version			1.0
+// @description		[Service name here]
 // @termsOfService	/
 // @contact.name	mail
-// @contact.url	/
+// @contact.url		/
 // @contact.email	kartashov_egor96@mail.ru
 // @license.name	MIT
-// @license.url	http://www.apache.org/licenses/MIT.html
+// @license.url		http://www.apache.org/licenses/MIT.html
 // @host			localhost:8888
 // @BasePath		/
-// @schemes		http
+// @schemes			http
 func main() {
+	// Catch terminate signals
 	ctx, done := signal.NotifyContext(context.Background(),
 		syscall.SIGHUP,
 		syscall.SIGINT,
@@ -35,6 +36,7 @@ func main() {
 
 	<-ctx.Done()
 
+	// Wait before shutdown
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer func() {
 		cancel()

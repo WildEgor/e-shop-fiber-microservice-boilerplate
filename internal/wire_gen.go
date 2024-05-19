@@ -21,6 +21,7 @@ import (
 func NewServer() (*Server, error) {
 	configurator := configs.NewConfigurator()
 	appConfig := configs.NewAppConfig(configurator)
+	loggerConfig := configs.NewLoggerConfig(configurator)
 	errorsHandler := error_handler.NewErrorsHandler()
 	privateRouter := routers.NewPrivateRouter()
 	healthCheckHandler := health_check_handler.NewHealthCheckHandler()
@@ -28,7 +29,7 @@ func NewServer() (*Server, error) {
 	pingCheckHandler := ping_handler.NewPingHandler()
 	publicRouter := routers.NewPublicRouter(healthCheckHandler, readyCheckHandler, pingCheckHandler)
 	swaggerRouter := routers.NewSwaggerRouter()
-	server := NewApp(appConfig, errorsHandler, privateRouter, publicRouter, swaggerRouter)
+	server := NewApp(appConfig, loggerConfig, errorsHandler, privateRouter, publicRouter, swaggerRouter)
 	return server, nil
 }
 
