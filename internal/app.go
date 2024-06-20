@@ -34,7 +34,7 @@ type Server struct {
 func (srv *Server) Run(ctx context.Context) {
 	slog.Info("server is listening")
 
-	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.Port), fiber.ListenConfig{
+	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.HttpPort), fiber.ListenConfig{
 		DisableStartupMessage: false,
 		EnablePrintRoutes:     false,
 		OnShutdownSuccess: func() {
