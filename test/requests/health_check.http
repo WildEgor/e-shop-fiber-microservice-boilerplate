@@ -1,0 +1,5 @@
+GET {{api}}/api/v1/ping
+Accept: application/json
+Content-Type: application/json
+
+###
