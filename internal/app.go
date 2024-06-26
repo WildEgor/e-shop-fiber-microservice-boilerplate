@@ -51,30 +51,29 @@ func (srv *Server) Run(ctx context.Context) {
 	pr := func(ac *configs.AppConfig) {
 		slog.Info("changer called")
 
-		go func() {
-			if ac.IsDebug() && srv.Pyro == nil {
-				slog.Info("pyro start")
-				srv.Pyro, _ = pyroscope.Start(pyroscope.Config{
-					ApplicationName: srv.AppConfig.Name,
-					ServerAddress:   srv.ProfilerConfig.API,
-					Logger:          pyroscope.StandardLogger,
-					ProfileTypes: []pyroscope.ProfileType{
-						pyroscope.ProfileCPU,
-						pyroscope.ProfileAllocObjects,
-						pyroscope.ProfileAllocSpace,
-						pyroscope.ProfileInuseObjects,
-						pyroscope.ProfileInuseSpace,
-					},
-				})
-			}
+		if ac.IsDebug() && srv.Pyro == nil {
+			slog.Info("pyro start")
+			srv.Pyro, _ = pyroscope.Start(pyroscope.Config{
+				ApplicationName: srv.AppConfig.Name,
+				ServerAddress:   srv.ProfilerConfig.API,
+				Logger:          pyroscope.StandardLogger,
+				ProfileTypes: []pyroscope.ProfileType{
+					pyroscope.ProfileCPU,
+					pyroscope.ProfileAllocObjects,
+					pyroscope.ProfileAllocSpace,
+					pyroscope.ProfileInuseObjects,
+					pyroscope.ProfileInuseSpace,
+				},
+			})
+		}
 
-			if !ac.IsDebug() {
-				slog.Info("pyro stop")
-				if srv.Pyro != nil {
-					srv.Pyro.Stop()
-				}
+		if !ac.IsDebug() {
+			slog.Info("pyro stop")
+			if srv.Pyro != nil {
+				srv.Pyro.Stop()
 			}
-		}()
+		}
+
 	}
 
 	srv.AppConfig.OnChanged(pr)
