@@ -12,8 +12,8 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/template/html/v2"
 	"github.com/google/wire"
+	"github.com/grafana/pyroscope-go"
 	"log/slog"
-	"os"
 	"time"
 )
 
@@ -26,13 +26,58 @@ var AppSet = wire.NewSet(
 
 // Server represents the main server configuration.
 type Server struct {
-	App       *fiber.App
-	AppConfig *configs.AppConfig
+	App            *fiber.App
+	Configurator   *configs.Configurator
+	AppConfig      *configs.AppConfig
+	ProfilerConfig *configs.ProfilerConfig
+	Pyro           *pyroscope.Profiler
 }
 
 // Run start service with deps
 func (srv *Server) Run(ctx context.Context) {
 	slog.Info("server is listening")
+
+	go func() {
+		slog.Info("watch config")
+		select {
+		default:
+			srv.Configurator.Watch()
+		case <-ctx.Done():
+			slog.Info("stop watch config")
+			return
+		}
+	}()
+
+	pr := func(ac *configs.AppConfig) {
+		slog.Info("changer called")
+
+		go func() {
+			if ac.IsDebug() && srv.Pyro == nil {
+				slog.Info("pyro start")
+				srv.Pyro, _ = pyroscope.Start(pyroscope.Config{
+					ApplicationName: srv.AppConfig.Name,
+					ServerAddress:   srv.ProfilerConfig.API,
+					Logger:          pyroscope.StandardLogger,
+					ProfileTypes: []pyroscope.ProfileType{
+						pyroscope.ProfileCPU,
+						pyroscope.ProfileAllocObjects,
+						pyroscope.ProfileAllocSpace,
+						pyroscope.ProfileInuseObjects,
+						pyroscope.ProfileInuseSpace,
+					},
+				})
+			}
+
+			if !ac.IsDebug() {
+				slog.Info("pyro stop")
+				if srv.Pyro != nil {
+					srv.Pyro.Stop()
+				}
+			}
+		}()
+	}
+
+	srv.AppConfig.OnChanged(pr)
 
 	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.HttpPort), fiber.ListenConfig{
 		DisableStartupMessage: false,
@@ -49,6 +94,10 @@ func (srv *Server) Run(ctx context.Context) {
 func (srv *Server) Shutdown(ctx context.Context) {
 	slog.Info("shutdown service")
 
+	if srv.Pyro != nil {
+		srv.Pyro.Stop()
+	}
+
 	if err := srv.App.Shutdown(); err != nil {
 		slog.Error("unable to shutdown server")
 	}
@@ -57,21 +106,13 @@ func (srv *Server) Shutdown(ctx context.Context) {
 func NewApp(
 	ac *configs.AppConfig,
 	lc *configs.LoggerConfig,
+	pc *configs.ProfilerConfig,
+	c *configs.Configurator,
 	eh *eh.ErrorsHandler,
 	prr *routers.PrivateRouter,
 	pbr *routers.PublicRouter,
 	sr *routers.SwaggerRouter,
 ) *Server {
-	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		Level: lc.Level,
-	}))
-	if lc.IsJSON() {
-		logger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			Level: lc.Level,
-		}))
-	}
-	slog.SetDefault(logger)
-
 	app := fiber.New(fiber.Config{
 		AppName:      ac.Name,
 		ErrorHandler: eh.Handle,
@@ -96,7 +137,9 @@ func NewApp(
 	app.Use(nfm.NewNotFound())
 
 	return &Server{
-		App:       app,
-		AppConfig: ac,
+		App:            app,
+		AppConfig:      ac,
+		ProfilerConfig: pc,
+		Configurator:   c,
 	}
 }

@@ -7,4 +7,5 @@ var ConfigsSet = wire.NewSet(
 	NewConfigurator,
 	NewAppConfig,
 	NewLoggerConfig,
+	NewProfilerConfig,
 )

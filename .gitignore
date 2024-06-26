@@ -20,3 +20,5 @@ app
 # vendor/
 
 .env
+.env.example
+config.yaml

@@ -36,7 +36,7 @@ RUN $GOPATH/bin/swag init -g cmd/main.go --output docs
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o dist/app cmd/main.go
 
 # Production Stage
-FROM cgr.dev/chainguard/busybox:latest-glibc as production
+FROM cgr.dev/chainguard/busybox:latest-glibc as prod
 WORKDIR /app/
 RUN mkdir -p /app/assets \
     mkdir -p /app/docs

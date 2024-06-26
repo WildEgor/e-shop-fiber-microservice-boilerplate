@@ -8,6 +8,13 @@ A containerised eShopFiberMicroserviceBoilerplate (mmm Java-style naming)
 | Hot Reloading     | [Air](https://github.com/cosmtrek/air) |
 | Containerisation  | [Docker](https://www.docker.com/)      |
 
+## Features
+- Hot-reloading in dev mode;
+- Containerized debug mode;
+- Profiler in debug mode;
+- Health checks;
+- Configuration;
+
 ## Structure
 
 - [/api](api/README.md)
@@ -34,12 +41,10 @@ go mod vendor
 go mod verify
 ```
 
-Define environment variables for your development environment:
-
-> These are passed to the Docker container via `docker-compose.yaml` in development. When running in production, the environment variables must be passed to the container when it is run.
+Define configs using `yaml`:
 
 ```bash
-cp .env.example .env
+cp config.example.yaml config.yaml
 ```
 
 Run locally:

@@ -1,24 +1,56 @@
 package configs
 
 import (
-	"github.com/joho/godotenv"
+	"fmt"
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
 	"log/slog"
 )
 
 // Configurator dummy
-type Configurator struct{}
+type Configurator struct {
+	watchers []func()
+}
 
 func NewConfigurator() *Configurator {
-	c := &Configurator{}
+	c := &Configurator{
+		watchers: make([]func(), 0),
+	}
 	c.load()
 
 	return c
 }
 
+func (c *Configurator) Watch() {
+	viper.WatchConfig()
+
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		slog.Info(fmt.Sprintf("watchers len: %d", len(c.watchers)))
+
+		for _, watcher := range c.watchers {
+			watcher()
+		}
+	})
+}
+
+func (c *Configurator) Register(name string, fn func()) {
+	slog.Info("register watcher", slog.Any("value", name))
+	c.watchers = append(c.watchers, fn)
+}
+
 // load Load env data from files (default: .env, .env.local)
 func (c *Configurator) load() {
-	if err := godotenv.Load(".env", ".env.local"); err != nil {
-		slog.Error("error loading envs file", slog.Any("err", err))
-		panic(err)
+	viper.AddConfigPath(".")
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	if err := viper.ReadInConfig(); err != nil {
+		slog.Error("error loading config file", slog.Any("err", err))
+		panic("error loading config file")
+	}
+
+	err := viper.MergeInConfig()
+	if err != nil {
+		slog.Error("error merge config file", slog.Any("err", err))
+		return
 	}
 }

@@ -1,35 +1,50 @@
 package configs
 
 import (
-	"github.com/caarlos0/env/v7"
+	"github.com/spf13/viper"
 	"log/slog"
+	"os"
 )
 
-var lvls map[string]slog.Leveler = map[string]slog.Leveler{
+var (
+	LogJsonFormat string = "json"
+)
+
+var logLevelToSlogLevel = map[string]slog.Leveler{
 	"debug": slog.LevelDebug,
 	"info":  slog.LevelInfo,
 }
 
-// LoggerConfig holds logger configurations
+// ProfilerConfig holds logger configurations
 type LoggerConfig struct {
-	Level  slog.Leveler
-	Format string `env:"LOG_FORMAT" envDefault:"json"`
-	level  string `env:"LOG_LEVEL" envDefault:"debug"`
+	Level  string `mapstructure:"level"`
+	Format string `mapstructure:"format"`
 }
 
 func NewLoggerConfig(c *Configurator) *LoggerConfig {
-	cfg := LoggerConfig{}
+	cfg := &LoggerConfig{}
 
-	if err := env.Parse(&cfg); err != nil {
-		slog.Error("log config parse error", slog.Any("err", err))
+	updater := func() {
+		if err := viper.UnmarshalKey("logger", cfg); err != nil {
+			slog.Error("logger parse error", slog.Any("err", err))
+			panic("logger parse error")
+		}
+
+		slog.Info("config", slog.Any("value", cfg))
+
+		logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			Level: logLevelToSlogLevel[cfg.Level],
+		}))
+		if cfg.Format == LogJsonFormat {
+			logger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+				Level: logLevelToSlogLevel[cfg.Level],
+			}))
+		}
+		slog.SetDefault(logger)
 	}
+	c.Register("logger config", updater)
 
-	cfg.Level = lvls[cfg.level]
+	updater()
 
-	return &cfg
-}
-
-// IsJSON check format
-func (c *LoggerConfig) IsJSON() bool {
-	return c.Format != "json"
+	return cfg
 }

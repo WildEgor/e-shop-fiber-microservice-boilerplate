@@ -5,3 +5,4 @@ docker-compose.yml
 .air-unix.toml
 .env
 .env.example
+config.yaml
