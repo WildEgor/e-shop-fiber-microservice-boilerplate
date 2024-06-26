@@ -5,7 +5,7 @@ services:
   # dev - runs in dev mode and live-reloading on every source file update.
   # debug - runs in debug mode exposing port and allow to connect from IDE
   # prod - runs in prod mod with minimal binary
-  app-docker:
+  app:
     restart: on-failure
     build:
 ##   if use private libs uncomment this
