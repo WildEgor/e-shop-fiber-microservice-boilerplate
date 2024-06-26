@@ -1,0 +1,12 @@
+app:
+  name: "app"
+  mode: "debug"
+  debug_port: "40000"
+  http_port: "8080"
+
+logger:
+  level: "debug"
+  format: "json"
+
+profiler:
+  api: http://localhost:4040
