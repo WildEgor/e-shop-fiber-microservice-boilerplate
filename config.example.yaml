@@ -9,4 +9,4 @@ logger:
   format: "json"
 
 profiler:
-  api: http://localhsot:4040
+  api: http://localhost:4040
