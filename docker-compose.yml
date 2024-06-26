@@ -21,7 +21,8 @@ services:
     cap_add:
       - SYS_PTRACE
     volumes:
-      - ./:/app
+      # - ./:/app
+      - ./config.yaml:/app/config.yaml
     ports:
-      - "8080:8080"
-      - "40000:40000"
+      - "8080:8080" # http port
+      # - "40000:40000" # debug port

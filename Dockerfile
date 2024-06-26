@@ -43,6 +43,5 @@ RUN mkdir -p /app/assets \
 COPY --from=build /app/assets/* ./assets
 COPY --from=build /app/docs/* ./docs
 COPY --from=build /app/dist/app .
-# Specify method fetch .env!
-COPY --from=build /app/.env.local .
+# Specify method fetch config
 CMD ["./app"]
