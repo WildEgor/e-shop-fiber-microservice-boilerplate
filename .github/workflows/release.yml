@@ -1,0 +1,61 @@
+---
+name: Release
+
+on:
+  release:
+    types:
+      - created
+  pull_request:
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch git tags
+        run: git fetch --force --tags
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./go.mod
+
+      - name: Docker Login
+        if: false # disabled
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Set up Docker BuildX
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64v8
+
+      - name: Run GoReleaser (Release)
+        uses: goreleaser/goreleaser-action@v6
+        if: github.event_name == 'release'
+        with:
+          args: 'release --clean'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run GoReleaser (PR)
+        uses: goreleaser/goreleaser-action@v6
+        if: github.event_name == 'pull_request'
+        with:
+          args: '--skip=publish --snapshot --clean'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
