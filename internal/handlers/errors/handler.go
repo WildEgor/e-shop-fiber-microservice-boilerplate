@@ -9,10 +9,12 @@ import (
 type ErrorsHandler struct {
 }
 
+// NewErrorsHandler creates new handler
 func NewErrorsHandler() *ErrorsHandler {
 	return &ErrorsHandler{}
 }
 
+// Handle errors
 func (hch *ErrorsHandler) Handle(ctx fiber.Ctx, err error) error {
 	sc := fiber.StatusInternalServerError
 	var e *fiber.Error

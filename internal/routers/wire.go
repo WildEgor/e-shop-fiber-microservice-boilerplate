@@ -5,9 +5,9 @@ import (
 	"github.com/google/wire"
 )
 
-// RouterSet acts like "controllers" for routing http or etc.
-var RouterSet = wire.NewSet(
-	handlers.HandlersSet,
+// Set acts like "controllers" for routing http or etc.
+var Set = wire.NewSet(
+	handlers.Set,
 	NewPublicRouter,
 	NewPrivateRouter,
 	NewSwaggerRouter,

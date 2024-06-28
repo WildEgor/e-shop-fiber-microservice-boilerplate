@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	// LogJsonFormat specify json format
 	LogJsonFormat string = "json"
 )
 
@@ -15,12 +16,13 @@ var logLevelToSlogLevel = map[string]slog.Leveler{
 	"info":  slog.LevelInfo,
 }
 
-// ProfilerConfig holds logger configurations
+// LoggerConfig holds logger configurations
 type LoggerConfig struct {
 	Level  string `mapstructure:"level"`
 	Format string `mapstructure:"format"`
 }
 
+// NewLoggerConfig create logger config
 func NewLoggerConfig(c *Configurator) *LoggerConfig {
 	cfg := &LoggerConfig{}
 

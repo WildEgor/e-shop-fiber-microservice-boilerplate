@@ -10,6 +10,7 @@ type ProfilerConfig struct {
 	API string `mapstructure:"api"`
 }
 
+// NewProfilerConfig create profiler config
 func NewProfilerConfig(c *Configurator) *ProfilerConfig {
 	cfg := &ProfilerConfig{}
 

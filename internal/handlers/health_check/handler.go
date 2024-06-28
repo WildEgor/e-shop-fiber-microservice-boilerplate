@@ -4,13 +4,16 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+// HealthCheckHandler represent handler
 type HealthCheckHandler struct {
 }
 
+// NewHealthCheckHandler creates new handler
 func NewHealthCheckHandler() *HealthCheckHandler {
 	return &HealthCheckHandler{}
 }
 
+// Handle health
 // HealthCheck 		godoc
 // @Summary			Health check service
 // @Description		Health check service

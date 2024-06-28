@@ -1,17 +1,17 @@
 package handlers
 
 import (
-	error_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/errors"
-	health_check_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
-	ping_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ping"
-	ready_check_handler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
+	eh "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/errors"
+	hch "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
+	ph "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ping"
+	rh "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
 	"github.com/google/wire"
 )
 
-// HandlersSet contains http/amqp/etc handlers (acts like facades)
-var HandlersSet = wire.NewSet(
-	error_handler.NewErrorsHandler,
-	health_check_handler.NewHealthCheckHandler,
-	ready_check_handler.NewReadyCheckHandler,
-	ping_handler.NewPingHandler,
+// Set contains http/amqp/etc handlers (acts like facades)
+var Set = wire.NewSet(
+	eh.NewErrorsHandler,
+	hch.NewHealthCheckHandler,
+	rh.NewReadyCheckHandler,
+	ph.NewPingHandler,
 )
