@@ -19,3 +19,6 @@ tasks:
   # Update swagger files
   swag:
     cmd: swag init -g cmd/main.go --output api/swagger
+
+  debug-build:
+    goreleaser release --snapshot --clean

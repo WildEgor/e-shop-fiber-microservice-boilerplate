@@ -4,17 +4,21 @@ version: 2
 project_name: e-shop-fiber-microservice-boilerplate
 
 builds:
-  - id: binary-build
-    main: ./cmd/main.go
-    binary: ./dist/app
+  - id: binary-build # ID of the build
+    main: ./cmd/main.go # Path to main.go file or main package
+    binary: app # Binary name
+    # Custom ldflags
     ldflags:
       - -s -w -X main.version={{.Version}}
+    # Custom environment variables to be set during the builds
     env:
       - CGO_ENABLED=0
+    # GOOS list to build for
     goos:
       - linux
       - darwin
       - windows
+    # GOARCH to build for
     goarch:
       - amd64
       - arm64
@@ -30,10 +34,10 @@ dockers:
       - "WildEgor/e-shop-fiber-microservice-boilerplate:{{.Tag}}-amd64"
     build_flag_templates:
       - "--platform=linux/amd64"
-    dockerfile: Dockerfile
+    dockerfile: Dockerfile.goreleaser
+    # You can add extra pre-existing files to the upload
     extra_files:
       - assets
-
   - goos: linux
     goarch: arm64
     use: buildx
@@ -44,12 +48,12 @@ dockers:
       - "WildEgor/e-shop-fiber-microservice-boilerplate:{{.Tag}}-arm64v8"
     build_flag_templates:
       - "--platform=linux/arm64/v8"
-    dockerfile: Dockerfile
+    dockerfile: Dockerfile.goreleaser
     extra_files:
       - assets
 
 docker_manifests:
-  - name_template: vgarvardt/rklotz:latest
+  - name_template: WildEgor/e-shop-fiber-microservice-boilerplate:latest
     image_templates:
       - "WildEgor/e-shop-fiber-microservice-boilerplate:latest-amd64"
       - "WildEgor/e-shop-fiber-microservice-boilerplate:latest-arm64v8"

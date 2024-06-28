@@ -1,0 +1,7 @@
+FROM cgr.dev/chainguard/busybox:latest-glibc
+WORKDIR /app/
+RUN mkdir -p /app/assets
+COPY ./assets/ /assets
+COPY app .
+RUN chmod a+x /app
+CMD ["/app"]

@@ -105,7 +105,7 @@ linters-settings:
     sections:
       - standard
       - default
-      - prefix(github.com/vgarvardt/rklotz)
+      - prefix(github.com/WildEgor/e-shop-fiber-microservice-boilerplate)
   staticcheck:
     checks:
       - all
