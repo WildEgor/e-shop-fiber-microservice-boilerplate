@@ -111,6 +111,11 @@ linters-settings:
       - all
 
 issues:
+  exclude:
+    - api/
+    - vendor/
+    - generated/
+    - .goreleaser.yml
   exclude-rules:
     - path: _test\.go
       linters:
