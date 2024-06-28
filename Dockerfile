@@ -6,7 +6,7 @@ LABEL maintainer="YOUR_NAME <YOUR_EMAIL>"
 #RUN apk update && apk add ca-certificates git openssh
 #RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
 WORKDIR /app
-COPY go.mod go.sum ./
+COPY ./go.mod ./go.sum ./
 RUN mkdir -p dist
 RUN go mod download
 
