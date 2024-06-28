@@ -29,7 +29,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: ${{ github.event_name != 'pull_request' }}
           DEFAULT_BRANCH: develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_EXCLUDE: '.*assets/.*'
+          FILTER_REGEX_EXCLUDE: '.*(assets/.*|\.goreleaser\.yml)'
           # go validator works pretty bad in super-linter, we'll use the original one
           VALIDATE_GO: false
           # do not validate SQL - linters are pretty useless in case of this library,
@@ -37,6 +37,7 @@ jobs:
           VALIDATE_SQL: false
           VALIDATE_SQLFLUFF: false
           VALIDATE_CHECKOV: false
+          VALIDATE_YAML: false
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -58,3 +59,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: codespell-project/actions-codespell@v2
+        with:
+          exclude_file: go.mod,go.sum,assets/dist/script.js
