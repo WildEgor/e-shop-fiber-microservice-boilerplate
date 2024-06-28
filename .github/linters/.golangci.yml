@@ -103,9 +103,9 @@ linters-settings:
   gci:
     custom-order: true
     sections:
-      - default
-      - standard
       - prefix(github.com/WildEgor/e-shop-fiber-microservice-boilerplate)
+      - standard
+#      - default
   staticcheck:
     checks:
       - all
