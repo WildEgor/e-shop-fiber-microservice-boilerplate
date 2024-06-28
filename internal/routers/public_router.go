@@ -1,9 +1,9 @@
 package routers
 
 import (
-	hch "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
-	ph "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ping"
-	rch "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
+	healthCheckHandler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/health_check"
+	pintCheckHandler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ping"
+	readyCheckHandler "github.com/WildEgor/e-shop-fiber-microservice-boilerplate/internal/handlers/ready_check"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
 	"github.com/gofiber/fiber/v3/middleware/limiter"
@@ -14,21 +14,21 @@ var _ Router[*fiber.App] = (*PublicRouter)(nil)
 
 // PublicRouter router
 type PublicRouter struct {
-	hch *hch.HealthCheckHandler
-	rch *rch.ReadyCheckHandler
-	ph  *ph.PingCheckHandler
+	hch *healthCheckHandler.HealthCheckHandler
+	rch *readyCheckHandler.ReadyCheckHandler
+	pch *pintCheckHandler.PingCheckHandler
 }
 
 // NewPublicRouter creates router
 func NewPublicRouter(
-	hch *hch.HealthCheckHandler,
-	rch *rch.ReadyCheckHandler,
-	ph *ph.PingCheckHandler,
+	hch *healthCheckHandler.HealthCheckHandler,
+	rch *readyCheckHandler.ReadyCheckHandler,
+	pch *pintCheckHandler.PingCheckHandler,
 ) *PublicRouter {
 	return &PublicRouter{
 		hch,
 		rch,
-		ph,
+		pch,
 	}
 }
 
@@ -41,7 +41,7 @@ func (r *PublicRouter) Setup(app *fiber.App) {
 	v1 := api.Group("/v1")
 
 	// TODO: use for testing only (remove it)
-	v1.Get("/ping", r.ph.Handle)
+	v1.Get("/ping", r.pch.Handle)
 
 	v1.Get("/livez", healthcheck.NewHealthChecker(healthcheck.Config{
 		Probe: func(ctx fiber.Ctx) bool {
