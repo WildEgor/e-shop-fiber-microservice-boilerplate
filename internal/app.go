@@ -20,8 +20,8 @@ import (
 // AppSet link main app deps
 var AppSet = wire.NewSet(
 	NewApp,
-	configs.ConfigsSet,
-	routers.RouterSet,
+	configs.Set,
+	routers.Set,
 )
 
 // Server represents the main server configuration.
@@ -53,7 +53,7 @@ func (srv *Server) Run(ctx context.Context) {
 
 		if ac.IsDebug() && srv.Pyro == nil {
 			slog.Info("pyro start")
-			srv.Pyro, _ = pyroscope.Start(pyroscope.Config{
+			pyro, err := pyroscope.Start(pyroscope.Config{
 				ApplicationName: srv.AppConfig.Name,
 				ServerAddress:   srv.ProfilerConfig.API,
 				Logger:          pyroscope.StandardLogger,
@@ -65,12 +65,22 @@ func (srv *Server) Run(ctx context.Context) {
 					pyroscope.ProfileInuseSpace,
 				},
 			})
+
+			if err != nil {
+				slog.Error("cannot start pyro client", slog.Any("err", err))
+			}
+
+			srv.Pyro = pyro
 		}
 
 		if !ac.IsDebug() {
 			slog.Info("pyro stop")
 			if srv.Pyro != nil {
-				srv.Pyro.Stop()
+				err := srv.Pyro.Stop()
+				if err != nil {
+					slog.Warn("cannot stop pyro client", slog.Any("err", err))
+					return
+				}
 			}
 		}
 
@@ -78,7 +88,7 @@ func (srv *Server) Run(ctx context.Context) {
 
 	srv.AppConfig.OnChanged(pr)
 
-	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.HttpPort), fiber.ListenConfig{
+	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.HTTPPort), fiber.ListenConfig{
 		DisableStartupMessage: false,
 		EnablePrintRoutes:     false,
 		OnShutdownSuccess: func() {
@@ -102,9 +112,10 @@ func (srv *Server) Shutdown(ctx context.Context) {
 	}
 }
 
+// NewApp init app
 func NewApp(
 	ac *configs.AppConfig,
-	lc *configs.LoggerConfig,
+	lc *configs.LoggerConfig, // init logger
 	pc *configs.ProfilerConfig,
 	c *configs.Configurator,
 	eh *eh.ErrorsHandler,

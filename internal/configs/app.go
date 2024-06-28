@@ -9,10 +9,11 @@ import (
 type AppConfig struct {
 	Name     string `mapstructure:"name"`
 	Mode     string `mapstructure:"mode"`
-	HttpPort string `mapstructure:"http_port"`
+	HTTPPort string `mapstructure:"http_port"`
 	changer  func(ac *AppConfig)
 }
 
+// NewAppConfig creates app config
 func NewAppConfig(c *Configurator) *AppConfig {
 	cfg := &AppConfig{}
 
@@ -34,6 +35,7 @@ func NewAppConfig(c *Configurator) *AppConfig {
 	return cfg
 }
 
+// OnChanged register callback
 func (ac *AppConfig) OnChanged(fn func(ac *AppConfig)) {
 	ac.changer = fn
 }

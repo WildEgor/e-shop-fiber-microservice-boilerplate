@@ -5,9 +5,13 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+var _ Router[*fiber.App] = (*SwaggerRouter)(nil)
+
+// SwaggerRouter router
 type SwaggerRouter struct {
 }
 
+// NewSwaggerRouter creates new router
 func NewSwaggerRouter() *SwaggerRouter {
 	return &SwaggerRouter{}
 }

@@ -31,7 +31,11 @@ func main() {
 	)
 	defer done()
 
-	srv, _ := server.NewServer()
+	srv, err := server.NewServer()
+	if err != nil {
+		panic(err)
+	}
+
 	srv.Run(ctx)
 
 	<-ctx.Done()

@@ -7,33 +7,33 @@ LABEL maintainer="YOUR_NAME <YOUR_EMAIL>"
 #RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
 WORKDIR /app
 COPY ./go.mod ./go.sum ./
-RUN mkdir -p dist
-RUN go mod download
+RUN mkdir -p dist && \
+    go mod download
 
 # Development Stage
 FROM base as dev
 WORKDIR /app/
 COPY . .
-RUN go install github.com/air-verse/air@latest
-RUN go build -o dist/app cmd/main.go
+RUN go install github.com/air-verse/air@latest && \
+    go build -o dist/app cmd/main.go
 CMD ["air", "-c", ".air-unix.toml", "-d"]
 
 # Debug stage
 FROM base as debug
 WORKDIR /
 COPY . .
-RUN go install github.com/go-delve/delve/cmd/dlv@latest
-RUN go build -gcflags="all=-N -l" -o /app/app cmd/main.go
-RUN mv /go/bin/dlv /
+RUN go install github.com/go-delve/delve/cmd/dlv@latest &&  \
+    go build -gcflags="all=-N -l" -o /app/app cmd/main.go &&  \
+    mv /go/bin/dlv /
 CMD ["/dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/app/app"]
 
 # Build Production Stage
 FROM base as build
 WORKDIR /app
 COPY . .
-RUN go install github.com/swaggo/swag/cmd/swag@latest
-RUN $GOPATH/bin/swag init -g cmd/main.go --output docs
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o dist/app cmd/main.go
+RUN go install github.com/swaggo/swag/cmd/swag@latest &&  \
+    $GOPATH/bin/swag init -g cmd/main.go --output docs &&  \
+    CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o dist/app cmd/main.go
 
 # Production Stage
 FROM cgr.dev/chainguard/busybox:latest-glibc as prod

@@ -12,6 +12,7 @@ type Configurator struct {
 	watchers []func()
 }
 
+// NewConfigurator create new Configurator
 func NewConfigurator() *Configurator {
 	c := &Configurator{
 		watchers: make([]func(), 0),
@@ -21,9 +22,8 @@ func NewConfigurator() *Configurator {
 	return c
 }
 
+// Watch config
 func (c *Configurator) Watch() {
-	viper.WatchConfig()
-
 	viper.OnConfigChange(func(e fsnotify.Event) {
 		slog.Info(fmt.Sprintf("watchers len: %d", len(c.watchers)))
 
@@ -31,8 +31,10 @@ func (c *Configurator) Watch() {
 			watcher()
 		}
 	})
+	viper.WatchConfig()
 }
 
+// Register watcher
 func (c *Configurator) Register(name string, fn func()) {
 	slog.Info("register watcher", slog.Any("value", name))
 	c.watchers = append(c.watchers, fn)

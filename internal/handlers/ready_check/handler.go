@@ -4,13 +4,16 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+// ReadyCheckHandler represent ready check
 type ReadyCheckHandler struct {
 }
 
+// NewReadyCheckHandler creates new handler
 func NewReadyCheckHandler() *ReadyCheckHandler {
 	return &ReadyCheckHandler{}
 }
 
+// Handle ready
 // HealthCheck 		godoc
 // @Summary			Ready check service
 // @Description		Ready check service
