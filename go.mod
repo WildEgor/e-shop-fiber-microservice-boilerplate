@@ -5,7 +5,7 @@ go 1.22.1
 require (
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/gofiber/fiber/v3 v3.0.0-beta.2
-	github.com/gofiber/template/html/v2 v2.1.1
+	github.com/gofiber/template/html/v2 v2.1.2
 	github.com/google/wire v0.6.0
 	github.com/grafana/pyroscope-go v1.1.1
 	github.com/spf13/viper v1.19.0
