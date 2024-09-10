@@ -7,7 +7,7 @@ require (
 	github.com/gofiber/fiber/v3 v3.0.0-beta.2
 	github.com/gofiber/template/html/v2 v2.1.1
 	github.com/google/wire v0.6.0
-	github.com/grafana/pyroscope-go v1.1.1
+	github.com/grafana/pyroscope-go v1.2.0
 	github.com/spf13/viper v1.19.0
 	github.com/swaggo/swag v1.16.3
 )
@@ -23,10 +23,10 @@ require (
 	github.com/gofiber/utils v1.1.0 // indirect
 	github.com/gofiber/utils/v2 v2.0.0-beta.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/grafana/pyroscope-go/godeltaprof v0.1.6 // indirect
+	github.com/grafana/pyroscope-go/godeltaprof v0.1.8 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/klauspost/compress v1.17.6 // indirect
+	github.com/klauspost/compress v1.17.8 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
